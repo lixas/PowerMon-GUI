@@ -57,6 +57,7 @@
 	</head>
 	<body>
 		<div id="app">
+<!-- Left side panel	 -->
 			<div class="panel panel-left panel-cover">
 				<div class="page page-accounts">
 					<div class="page-content">
@@ -68,14 +69,18 @@
 							</div>
 						</div>
 						<div class="list no-chevron">
-							<!-- Light and dark theme icons -->
-							<div class="item-media">
-								<i class="icon f7-icons" onclick="setLayoutTheme('light')">sun_max</i>
-								<i class="icon f7-icons" onclick="setLayoutTheme('dark')">moon</i>
-								Switch theme
-							</div>
-							<div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
 							<ul>
+								<li>
+									<a href="#" class="item-content item-link panel-close" onclick="toggleTheme()">
+										<div class="item-media">
+											<i class="icon f7-icons">circle_lefthalf_fill</i>
+										</div>
+										<div class="item-inner">
+											<div class="item-title">Switch theme</div>
+										</div>
+									</a>
+								</li>
+								<div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
 								<li>
 									<a href="/settings" class="item-content item-link panel-close" data-transition="f7-cover">
 										<div class="item-media">
@@ -119,7 +124,7 @@
 								</li>
 								<div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
 								<li>
-									<a href="#" class="item-content item-link" onClick="helloWorld()" >
+									<a href="#" class="item-content item-link" onClick="newVersionAvailable()" >
 										<div class="item-media">
 											<i class="icon f7-icons">tray_arrow_down</i>
 										</div>
@@ -136,6 +141,7 @@
 					</div>
 				</div>
 			</div>
+<!-- / Left side panel	 -->
 			<div class="view view-main view-init">
 				<div class="page no-navbar">
 					<div class="page-content">
@@ -155,11 +161,12 @@
 								</div>
 							</div>
 						</div>
+	<!-- main content begin -->
 						<div class="block">
-							<!-- Area Chart element -->
+							<p class="text-align-center">Updated 2023-11-25</p>
+	<!-- Area Chart element -->
 							<div class="area-chart area-chart-lines"></div>
-							<!-- main content begin -->
-							
+	
 							<div class="data-table">
 								<table>
 									<thead>
@@ -192,8 +199,11 @@
 									</tbody>
 								</table>
 							</div>
-	<!-- 							 -->
-							<div class="block-title"><i class="icon f7-icons">info_circle</i> Device remote control</div>
+	<!-- Remote control buttons -->
+							<div class="block-title">
+								<a href="#" onClick="remoteControlInfo()"><i class="icon f7-icons">info_circle</i></a>
+								 Device remote control
+							</div>
 							<div class="block block-strong block-outline-ios">
 								<div class="grid grid-cols-4 grid-gap">
 									<button class="button button-tonal">Setup</button>
@@ -202,8 +212,8 @@
 									<button class="button button-tonal">Enter</button>
 								</div>
 							</div>
-							<div class="block-footer">Using these buttons you can control device. You must have visual with the device to see what you are doing.</div>
-<!-- 							 -->
+							<div class="block-footer"></div>
+<!-- / Remote control buttons -->
 						</div>
 					</div>
 				</div>
@@ -213,7 +223,16 @@
 		<script src="js/framework7-bundle.min.js"></script>
 		<script>
 			var $$ = Dom7;
-			var globalTheme = 'dark';
+			
+			// detect default theme
+			if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+				// Theme set to dark.
+				var globalTheme = 'dark';
+			} else {
+				// Theme set to light.
+				var globalTheme = 'light';
+			}
+	
 			let theme = globalTheme;
 			const webapp = new Framework7({
 				el: '#app',
@@ -249,7 +268,11 @@
 				},
 			});
 			
-			function helloWorld() {
+			function remoteControlInfo() {
+						webapp.dialog.alert('Using these buttons you can control device. You must have visual with the device to see what you are doing.', 'Remote Control');
+			};
+			
+			function newVersionAvailable() {
 						webapp.dialog.alert('This action will begin new version download', 'Updater');
 			};
 
@@ -265,15 +288,14 @@
 				theme = globalTheme;
 				// checkTheme();
 			};
-			// const checkTheme = () => {
-			//   if (theme === 'light') {
-			//     document.getElementById("light").checked = true;
-			//     document.getElementById("dark").checked = false;
-			//   } else {
-			//     document.getElementById("light").checked = false;
-			//     document.getElementById("dark").checked = true;
-			//   }
-			// }
+	
+			const toggleTheme = () => {
+			  if (theme === 'light') {
+			    setLayoutTheme('dark')
+			  } else {
+					setLayoutTheme('light')
+			  }
+			}
 			// // create searchbar
 			// const searchbar = app.searchbar.create({
 			//   el: '.searchbar',
@@ -321,17 +343,17 @@
 				},
 				datasets: [
 					{
-						label: 'Vol',
+						label: 'Voltage',
 						color: '#f00',
 						values: [220, 225, 218, 225],
 					},
 					{
-						label: 'Cur',
+						label: 'Current',
 						color: '#00f',
 						values: [50, 75, 83, 67],
 					},
 					{
-						label: 'Ene',
+						label: 'Energy',
 						color: '#0f0',
 						values: [0, 100, 250, 307],
 					},
@@ -344,17 +366,17 @@
 					axisLabels: [9, 8, 7, 6, 5],
 					datasets: [
 						{
-							label: 'Vol',
+							label: 'Voltage',
 							color: '#f00',
 							values: [220, 225, 218, 225, 210],
 						},
 						{
-							label: 'Cur',
+							label: 'Current',
 							color: '#00f',
 							values: [50, 75, 83, 67, 55],
 						},
 						{
-							label: 'Ene',
+							label: 'Energy',
 							color: '#0f0',
 							values: [0, 100, 250, 307, 300],
 						},
