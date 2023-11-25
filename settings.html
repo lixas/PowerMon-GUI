@@ -1,0 +1,170 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="left">
+          <a href="#" class="back icon-only">
+            <i class="icon icon-back"></i>
+          </a>
+          <!-- <a href="#" class="link icon-only"><i class="icon icon-back"></i></a> -->
+        </div>
+        <div class="title">Settings</div>
+        <div class="right">
+          <a href="#" class="link icon-only">
+            <i class="icon icon-star"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+        <!-- <a href="#" class="link button" @click=${helloWorld}>Test</a> -->
+        
+      <!-- Simulate harware -->
+      <div class="list list-media list-outline-ios list-strong-ios list-dividers-ios">
+        <ul>
+          <li>
+            <div class="item-content">
+              <!-- <div class="item-media"><i class="icon f7-icons">sparkles</i></div> -->
+              <div class="item-inner">
+                <div class="item-title">
+                    Simulate hardware
+                    <div class="item-footer">If you dont have required hardware but still want to check application, you can use in-app hardware simulator. NOTE: Still you have to "connect"</div>
+                </div>
+                <div class="item-after">
+                  <label class="toggle toggle-init">
+                    <input type="checkbox" />
+                    <span class="toggle-icon"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="block-title">Chart</div>
+      <div class="list list-outline-ios list-strong-ios list-dividers-ios">
+        <ul>
+          <li>
+            <div class="item-content">
+              <!-- <div class="item-media"><i class="icon f7-icons">sparkles</i></div> -->
+              <div class="item-inner">
+                <div class="item-title">
+                    Show chart
+                    <div class="item-footer">Show line chart on main screen for historical data, while you are connected to device.</div>
+                </div>
+                <div class="item-after">
+                  <label class="toggle toggle-init">
+                    <input type="checkbox" />
+                    <span class="toggle-icon"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <a class="item-link smart-select smart-select-init" data-open-in="sheet" data-close-on-select="true" data-sheet-close-link-text="Close">
+              <select name="chartDurationSeconds">
+                <option value="60">1 minute</option>
+                <option value="300" selected>5 minutes</option>
+                <option value="600">10 minutes</option>
+                <option value="1800">30 minutes</option>
+                <option value="3600">1 hour</option>
+                <option value="7200">2 hors</option>
+                <option value="21600">6 hours</option>
+                <option value="43200">12 hours</option>
+                <option value="86400">24 hours</option>
+              </select>
+              <div class="item-content">
+                <!-- <div class="item-media"><i class="icon f7-icons">chart</i></div> -->
+                <div class="item-inner">
+                  <div class="item-title">
+                      Chart duration
+                      <div class="item-footer">Choose how much data you wish to see. NOTE: historical data is not saved on device</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="list list-strong-ios list-outline-ios list-dividers-ios">
+        <ul>
+          <li>
+            <div class="item-content popup-open sortable-enable" data-sortable=".sortable" data-popup=".sort-popup">
+              <!-- <div class="item-media"><i class="icon icon-f7"></i></div> -->
+              <div class="item-inner">
+                <div class="item-title">
+                    Measurements order and visibility
+                    <div class="item-footer">Select the order of elements that you would like to see or hide irrelevant ones for you dash</div>
+                </div>
+                <div class="item-after">
+                  <span class="badge">5</span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- <div class="block"> 
+          Hello World
+      </div> -->
+    </div>
+    <div class="popup sort-popup">
+      <div class="page">
+        <div class="navbar">
+          <div class="navbar-bg"></div>
+          <div class="navbar-inner">
+            <div class="title">Select and reorder</div>
+            <div class="right">
+              <a class="link popup-close" @click="helloWorld">Close</a>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+            <!-- <div class="block"> <a class="button sortable-toggle" data-sortable=".sortable">Enable sort1</a> -->
+            <div class="list sortable">
+              <ul> 
+                  ${window.Measurements.map((item) => $h` 
+                <li>
+                  <div class="item-checkbox item-content">
+                    <input type="checkbox" name=${item.key} checked=${item.checked} />
+                    <!-- <div class="item-media"><i class="icon icon-f7"></i></div> -->
+                    <div class="item-inner">
+                      <div class="item-title">${item.title}</div>
+                      <!-- <div class="item-after">Director</div> -->
+                    </div>
+                  </div>
+                  <div class="sortable-handler"></div>
+                </li> 
+                  `)}
+              </ul>
+            </div>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+export default (props, { $f7 }) => {
+
+    const helloWorld = () => {
+        $f7.dialog.alert('Hello World!', 'My title');
+        
+        // Create toast
+        let toastCenter = $f7.toast.create({
+            text: 'I\'m on center',
+            position: 'center',
+            closeButton: true,
+            closeTimeout: 5000,
+        });
+        // Open it
+        toastCenter.open();
+    };
+
+    return $render;
+};
+</script>
