@@ -23,6 +23,12 @@
 				--f7-navbar-margin: 12px;
 			}
 
+			/* .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+      } */
+
 			.navbar {
 				/* margin: 24px var(--f7-navbar-margin); */
 				/* width: calc(100% - 2 * var(--f7-navbar-margin)); */
@@ -40,6 +46,9 @@
 				margin: 0;
 			}
 
+			/* .page-content {
+      padding-top: 112px;
+    } */
 			/* Limit resizable panel width */
 			.panel {
 				width: 70vw;
@@ -47,8 +56,8 @@
 		</style>
 	</head>
 	<body>
-		
-		<div id="app"><!-- Left side panel	 -->
+		<div id="app">
+<!-- Left side panel	 -->
 			<div class="panel panel-left panel-cover">
 				<div class="page page-accounts">
 					<div class="page-content">
@@ -132,8 +141,83 @@
 					</div>
 				</div>
 			</div>
-<!-- /END Left side panel	 -->
-			<div class="view view-main"></div>
+<!-- / Left side panel	 -->
+			<div class="view view-main view-init">
+				<div class="page no-navbar">
+					<div class="page-content">
+						<div class="navbar">
+							<div class="navbar-bg"></div>
+							<div class="navbar-inner">
+								<div class="left">
+									<a class="link panel-open icon-only" data-panel="left">
+										<i class="icon f7-icons">bars</i>
+									</a>
+								</div>
+								<div class="title">Power Monitor</div>
+								<div class="right">
+									<a class="link icon-only navbar-tooltip">
+										<i class="icon f7-icons">bolt_slash</i>
+									</a>
+								</div>
+							</div>
+						</div>
+	<!-- main content begin -->
+						<div class="block">
+							<p class="text-align-center">Updated 2023-11-25</p>
+	<!-- Area Chart element -->
+							<div class="area-chart area-chart-lines"></div>
+	
+							<div class="data-table">
+								<table>
+									<thead>
+										<tr>
+											<th class="label-cell">Measurement</th>
+											<th class="numeric-cell">Value</th>
+											<th class="text-cell">Unit</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="label-cell">Voltage</td>
+											<td class="numeric-cell">4.20</td>
+											<td class="text-cell">V</td>
+										</tr>
+										<tr>
+											<td class="label-cell">Current</td>
+											<td class="numeric-cell">1.39</td>
+											<td class="text-cell">A</td>
+										</tr>
+										<tr>
+											<td class="label-cell">Power</td>
+											<td class="numeric-cell">5.838</td>
+											<td class="text-cell">W</td>
+										</tr>
+										<tr>
+											<td class="label-cell">Time</td>
+											<td colspan="2" class="numeric-cell">74:37:13</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+	<!-- Remote control buttons -->
+							<div class="block-title">
+								<a href="#" onClick="remoteControlInfo()"><i class="icon f7-icons">info_circle</i></a>
+								 Device remote control
+							</div>
+							<div class="block block-strong block-outline-ios">
+								<div class="grid grid-cols-4 grid-gap">
+									<button class="button button-tonal">Setup</button>
+									<button class="button button-tonal">-</button>
+									<button class="button button-tonal">+</button>
+									<button class="button button-tonal">Enter</button>
+								</div>
+							</div>
+							<div class="block-footer"></div>
+<!-- / Remote control buttons -->
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<script src="js/framework7-bundle.min.js"></script>
@@ -145,7 +229,7 @@
 				routes: [
 					{
 						path: '/',
-						componentUrl: './home.html',
+						componentUrl: './index.html',
 					},
 					{
 						path: '/settings',
@@ -173,32 +257,37 @@
 				},
 			});
 			
+			function remoteControlInfo() {
+						webapp.dialog.alert('Using these buttons you can control device. You must have visual with the device to see what you are doing.', 'Remote Control');
+			};
+			
 			function newVersionAvailable() {
 						webapp.dialog.alert('This action will begin new version download', 'Updater');
 			};
 
-			
-			webapp.views.create('.view-main', {
-				url: '/'
-			})
-	
-			var globalTheme
+			navbarTooltip = webapp.tooltip.create({
+				targetEl: '.navbar-tooltip',
+				text: 'One more tooltip<br />with more text<br /><em>and custom formatting</em>',
+			});
 			
 			// detect default theme
 			if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 				// Theme set to dark.
-				globalTheme = 'dark';
+				var globalTheme = 'dark';
 			} else {
 				// Theme set to light.
-				globalTheme = 'light';
+				var globalTheme = 'light';
 			}
+	
+			// let theme = globalTheme;
 
 			const setLayoutTheme = (newTheme) => {
 				var $$html = $$('html');
 				globalTheme = newTheme;
 				$$html.removeClass('dark light').addClass(globalTheme);
+				// theme = globalTheme;
+				// checkTheme();
 			};
-			setLayoutTheme(globalTheme);
 	
 			const toggleTheme = () => {
 			  if (globalTheme === 'light') {
@@ -207,6 +296,83 @@
 					setLayoutTheme('light')
 			  }
 			}
+
+			setLayoutTheme(globalTheme);
+
+
+			let areaLines;
+			// helpers data for axis
+			const dates = [];
+			const today = new Date();
+			const year = today.getFullYear();
+			const month = today.getMonth();
+			for (let i = 0; i < 40; i += 1) {
+				dates.push(new Date(year, month - (3 - i)));
+			}
+			const axisDateFormat = Intl.DateTimeFormat(undefined, {
+				month: 'short',
+				year: 'numeric',
+			});
+			const tooltipDateFormat = Intl.DateTimeFormat(undefined, {
+				month: 'long',
+				year: 'numeric',
+			});
+			areaLines = webapp.areaChart.create({
+				el: '.area-chart-lines',
+				tooltip: true,
+				axis: true,
+				axisLabels: dates,
+				legend: true,
+				toggleDatasets: true,
+				lineChart: true,
+				formatAxisLabel(date) {
+					return axisDateFormat.format(date);
+				},
+				formatTooltipAxisLabel(date) {
+					return tooltipDateFormat.format(date);
+				},
+				datasets: [
+					{
+						label: 'Voltage',
+						color: '#f00',
+						values: [220, 225, 218, 225],
+					},
+					{
+						label: 'Current',
+						color: '#00f',
+						values: [50, 75, 83, 67],
+					},
+					{
+						label: 'Energy',
+						color: '#0f0',
+						values: [0, 100, 250, 307],
+					},
+				],
+			});
+
+			// and when we need to update rendered SVG based on new datasets:
+			setTimeout(() => {
+				areaLines.update({
+					axisLabels: [9, 8, 7, 6, 5],
+					datasets: [
+						{
+							label: 'Voltage',
+							color: '#f00',
+							values: [220, 225, 218, 225, 210],
+						},
+						{
+							label: 'Current',
+							color: '#00f',
+							values: [50, 75, 83, 67, 55],
+						},
+						{
+							label: 'Energy',
+							color: '#0f0',
+							values: [0, 100, 250, 307, 300],
+						},
+					],
+				});
+			}, '5000');
 
 			window.Measurements = [
 				{ key: 'Vol',				checked: true,	title: 'Voltage',					idx: 0, val: ['V']					},
