@@ -19,11 +19,11 @@
 						</div>
 	<!-- main content begin -->
 						<div class="block">
-							<p class="text-align-center">Updated 2023-11-28</p>
+							<!-- <p class="text-align-center">Updated 2023-11-28</p> -->
 	<!-- Area Chart element -->
 							<!-- <div class="area-chart area-chart-lines"></div> -->
 							<div style="width: 100%;"><canvas id="measurements-chart"></canvas></div>
-	
+	<div class="list list-dividers-ios"></div>
 							<div class="data-table">
 								<table>
 									<thead>
@@ -34,7 +34,15 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
+										${window.Measurements.filter(item => item.checked).map((item) => $h`
+										<tr id="Measurement-${item.key}">
+											<td class="label-cell">${item.title}</td>
+											<td class="numeric-cell">0</td>
+											<td class="text-cell">${item.val[item.idx]}</td>
+										</tr>
+										`)}
+										
+										<!-- <tr>
 											<td class="label-cell">Voltage</td>
 											<td class="numeric-cell">4.20</td>
 											<td class="text-cell">V</td>
@@ -52,7 +60,7 @@
 										<tr>
 											<td class="label-cell">Time</td>
 											<td colspan="2" class="numeric-cell">74:37:13</td>
-										</tr>
+										</tr> -->
 									</tbody>
 								</table>
 							</div>
@@ -63,107 +71,44 @@
 							</div>
 							<div class="block block-strong block-outline-ios">
 								<div class="grid grid-cols-4 grid-gap">
-									<button class="button button-tonal">Setup</button>
-									<button class="button button-tonal">-</button>
-									<button class="button button-tonal">+</button>
-									<button class="button button-tonal">Enter</button>
+									<button @click=${ControlButton.bind(null, 'Setup')} class="button button-tonal">Setup</button>
+									<button @click=${ControlButton.bind(null, 'Minus')} class="button button-tonal">-</button>
+									<button @click=${ControlButton.bind(null, 'Plus')} class="button button-tonal">+</button>
+									<button @click=${ControlButton.bind(null, 'Enter')} class="button button-tonal">Enter</button>
 								</div>
 							</div>
-							<div class="block-footer"></div>
+							<!-- <div class="block-footer">tooter text</div> -->
 <!-- / Remote control buttons -->
 						</div>
 					</div>
 				</div>
-
 </template>
 
 <script>
   export default (props, { $f7, $onMounted, $onBeforeUnmount }) => {
 		
 		const remoteControlInfo = () => {
-        $f7.dialog.alert('Using these buttons you can control device. You must have visual with the device to see what you are doing.', 'Remote Control');
+			$f7.dialog.alert('Using these buttons you can control device. You must have visual with the device to see what you are doing.', 'Remote Control');
 		}
 		
+		// Will be split into separate functions
+		const ControlButton = (atr) => {
+			$f7.toast.create({
+				text: atr + ' button has been pressed',
+				position: 'center',
+				closeTimeout: 2000,
+				closeButton: true,
+			}).open();
+		}
 		
+		// document.getElementById('Measurement-Vol').children[1].innerHTML="7"
 		
-		let navbarTooltip;
-    let areaLines;
-		let jschart;
-
-    // helpers data for axis
-    const dates = [];
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    for (let i = 0; i < 4; i += 1) {
-      dates.push(new Date(year, month - (3 - i)))
-    }
-    const axisDateFormat = Intl.DateTimeFormat(undefined, { month: 'short', year: 'numeric' })
-    const tooltipDateFormat = Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' })
-
-    $onMounted(() => {
-
-			navbarTooltip = $f7.tooltip.create({
+		$onMounted(() => {
+			
+			$f7.tooltip.create({
 				targetEl: '.navbar-tooltip',
 				text: 'One more tooltip<br />with more text<br /><em>and custom formatting</em>',
 			});
-			
-			// areaLines = $f7.areaChart.create({
-			// el: '.area-chart-lines',
-			// tooltip: true,
-			// axis: true,
-			// axisLabels: dates,
-			// legend: true,
-			// toggleDatasets: true,
-			// lineChart: true,
-			// formatAxisLabel(date) {
-			// return axisDateFormat.format(date);
-			// },
-			// formatTooltipAxisLabel(date) {
-			// return tooltipDateFormat.format(date);
-			// },
-			// datasets: [
-			// 		{
-			// 			label: 'Voltage',
-			// 			color: '#f00',
-			// 			values: [220, 225, 218, 225],
-			// 		},
-			// 		{
-			// 			label: 'Current',
-			// 			color: '#00f',
-			// 			values: [50, 75, 83, 67],
-			// 		},
-			// 		{
-			// 			label: 'Energy',
-			// 			color: '#0f0',
-			// 			values: [0, 100, 250, 307],
-			// 		},
-			// ]
-			// });
-			
-			// setTimeout(() => {
-			// 	areaLines.update({
-			// 		axisLabels: [9, 8, 7, 6, 5],
-			// 		datasets: [
-			// 			{
-			// 				label: 'Voltage',
-			// 				color: '#f00',
-			// 				values: [220, 225, 218, 225, 210],
-			// 			},
-			// 			{
-			// 				label: 'Current',
-			// 				color: '#00f',
-			// 				values: [50, 75, 83, 67, 55],
-			// 			},
-			// 			{
-			// 				label: 'Energy',
-			// 				color: '#0f0',
-			// 				values: [0, 100, 250, 307, 300],
-			// 			},
-			// 		],
-			// 	});
-			// }, '5000');
-			
 			
 			const data = [
 				{ year: 2010, v: 10, c: 20 },
@@ -174,8 +119,8 @@
 				{ year: 2015, v: 30, c: 28 },
 				{ year: 2016, v: 28, c: 10 },
 			];
-
-			jschart =new Chart(
+			
+			let jschart =new Chart(
 				document.getElementById('measurements-chart'),
 				{
 					type: 'line',
@@ -194,14 +139,13 @@
 					}
 				}
 			);
+		}) //END $onMounted
 		
-    }) //END $onMounted
-
-    $onBeforeUnmount(() => {
-      // areaLines.destroy();
+		$onBeforeUnmount(() => {
+			// areaLines.destroy();
 			jschart.destroy();
-    })
-
-    return $render;
-  }
+		})
+		
+		return $render;
+	}
 </script>
