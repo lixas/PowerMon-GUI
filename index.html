@@ -2,13 +2,11 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"
-		/>
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" /> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<meta name="theme-color" content="#2196f3" />
+		<!-- <meta name="theme-color" content="#2196f3" /> -->
 		<meta
 			http-equiv="Content-Security-Policy"
 			content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data:"
@@ -45,6 +43,13 @@
 			.panel {
 				width: 70vw;
 			}
+
+			.panel-logo{
+				background-image:url(images/GreenBack.jpg); 
+				padding-bottom:10px; 
+				border-radius: 8px; 
+				color: #fff
+			}
 		</style>
 	</head>
 	<body>
@@ -52,9 +57,9 @@
 			<div class="panel panel-left panel-cover">
 				<div class="page page-accounts">
 					<div class="page-content">
-						<div class="block-title .round" style="background-image:url(images/GreenBack.jpg); padding-bottom:10px; border-radius: 8px; color: #fff">
+						<div class="block-title .round panel-logo">
 							<div class="margin-left">
-							<img src="images/website_logo.png" />
+							<img alt="Logo" src="images/website_logo.png" />
 							<p class="title">Ignas Bukys</p>
 							http://www.bukys.eu
 							</div>

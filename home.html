@@ -1,87 +1,87 @@
 <template>
-				<div class="page no-navbar">
-					<div class="page-content">
-						<div class="navbar">
-							<div class="navbar-bg"></div>
-							<div class="navbar-inner">
-								<div class="left">
-									<a class="link panel-open icon-only" data-panel="left">
-										<i class="icon f7-icons">bars</i>
-									</a>
-								</div>
-								<div class="title">Power Monitor</div>
-								<div class="right">
-									<a class="link icon-only navbar-tooltip">
-										<i class="icon f7-icons">bolt_slash</i>
-									</a>
-								</div>
-							</div>
-						</div>
-	<!-- main content begin -->
-						<div class="block">
-							<!-- <p class="text-align-center">Updated 2023-11-28</p> -->
-	<!-- Area Chart element -->
-							<!-- <div class="area-chart area-chart-lines"></div> -->
-							<div style="width: 100%;"><canvas id="measurements-chart"></canvas></div>
-	<div class="list list-dividers-ios"></div>
-							<div class="data-table">
-								<table>
-									<thead>
-										<tr>
-											<th class="label-cell">Measurement</th>
-											<th class="numeric-cell">Value</th>
-											<th class="text-cell">Unit</th>
-										</tr>
-									</thead>
-									<tbody>
-										${window.Measurements.filter(item => item.checked).map((item) => $h`
-										<tr id="Measurement-${item.key}">
-											<td class="label-cell">${item.title}</td>
-											<td class="numeric-cell">0</td>
-											<td class="text-cell">${item.val[item.idx]}</td>
-										</tr>
-										`)}
-										
-										<!-- <tr>
-											<td class="label-cell">Voltage</td>
-											<td class="numeric-cell">4.20</td>
-											<td class="text-cell">V</td>
-										</tr>
-										<tr>
-											<td class="label-cell">Current</td>
-											<td class="numeric-cell">1.39</td>
-											<td class="text-cell">A</td>
-										</tr>
-										<tr>
-											<td class="label-cell">Power</td>
-											<td class="numeric-cell">5.838</td>
-											<td class="text-cell">W</td>
-										</tr>
-										<tr>
-											<td class="label-cell">Time</td>
-											<td colspan="2" class="numeric-cell">74:37:13</td>
-										</tr> -->
-									</tbody>
-								</table>
-							</div>
-	<!-- Remote control buttons -->
-							<div class="block-title">
-								<a href="#" @click=${remoteControlInfo}><i class="icon f7-icons">info_circle</i></a>
-								 Device remote control
-							</div>
-							<div class="block block-strong block-outline-ios">
-								<div class="grid grid-cols-4 grid-gap">
-									<button @click=${ControlButton.bind(null, 'Setup')} class="button button-tonal">Setup</button>
-									<button @click=${ControlButton.bind(null, 'Minus')} class="button button-tonal">-</button>
-									<button @click=${ControlButton.bind(null, 'Plus')} class="button button-tonal">+</button>
-									<button @click=${ControlButton.bind(null, 'Enter')} class="button button-tonal">Enter</button>
-								</div>
-							</div>
-							<!-- <div class="block-footer">tooter text</div> -->
-<!-- / Remote control buttons -->
-						</div>
+	<div class="page no-navbar">
+		<div class="page-content">
+			<div class="navbar">
+				<div class="navbar-bg"></div>
+				<div class="navbar-inner">
+					<div class="left">
+						<a class="link panel-open icon-only" data-panel="left">
+							<i class="icon f7-icons">bars</i>
+						</a>
+					</div>
+					<div class="title">Power Monitor</div>
+					<div class="right">
+						<a class="link icon-only navbar-tooltip">
+							<i class="icon f7-icons">bolt_slash</i>
+						</a>
 					</div>
 				</div>
+			</div>
+<!-- main content begin -->
+			<div class="block">
+				<!-- <p class="text-align-center">Updated 2023-11-28</p> -->
+<!-- Area Chart element -->
+				<!-- <div class="area-chart area-chart-lines"></div> -->
+				<div style="width: 100%;"><canvas id="measurements-chart"></canvas></div>
+<div class="list list-dividers-ios"></div>
+				<div class="data-table">
+					<table>
+						<thead>
+							<tr>
+								<th class="label-cell">Measurement</th>
+								<th class="numeric-cell">Value</th>
+								<th class="text-cell">Unit</th>
+							</tr>
+						</thead>
+						<tbody>
+							${window.Measurements.filter(item => item.checked).map((item) => $h`
+							<tr id="Measurement-${item.key}">
+								<td class="label-cell">${item.title}</td>
+								<td class="numeric-cell">0</td>
+								<td class="text-cell">${item.val[item.idx]}</td>
+							</tr>
+							`)}
+							
+							<!-- <tr>
+								<td class="label-cell">Voltage</td>
+								<td class="numeric-cell">4.20</td>
+								<td class="text-cell">V</td>
+							</tr>
+							<tr>
+								<td class="label-cell">Current</td>
+								<td class="numeric-cell">1.39</td>
+								<td class="text-cell">A</td>
+							</tr>
+							<tr>
+								<td class="label-cell">Power</td>
+								<td class="numeric-cell">5.838</td>
+								<td class="text-cell">W</td>
+							</tr>
+							<tr>
+								<td class="label-cell">Time</td>
+								<td colspan="2" class="numeric-cell">74:37:13</td>
+							</tr> -->
+						</tbody>
+					</table>
+				</div>
+<!-- Remote control buttons -->
+				<div class="block-title">
+					<a href="#" @click=${remoteControlInfo}><i class="icon f7-icons">info_circle</i></a>
+						Device remote control
+				</div>
+				<div class="block block-strong block-outline-ios">
+					<div class="grid grid-cols-4 grid-gap">
+						<button @click=${ControlButton.bind(null, 'Setup')} class="button button-tonal">Setup</button>
+						<button @click=${ControlButton.bind(null, 'Minus')} class="button button-tonal">-</button>
+						<button @click=${ControlButton.bind(null, 'Plus')} class="button button-tonal">+</button>
+						<button @click=${ControlButton.bind(null, 'Enter')} class="button button-tonal">Enter</button>
+					</div>
+				</div>
+				<!-- <div class="block-footer">tooter text</div> -->
+<!-- / Remote control buttons -->
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -111,13 +111,13 @@
 			});
 			
 			const data = [
-				{ year: 2010, v: 10, c: 20 },
-				{ year: 2011, v: 20, c: 15 },
-				{ year: 2012, v: 15, c: 25 },
-				{ year: 2013, v: 25, c: 22 },
-				{ year: 2014, v: 22, c: 30 },
-				{ year: 2015, v: 30, c: 28 },
-				{ year: 2016, v: 28, c: 10 },
+				{ year: 2010, v: 10, c: 20, p: 200 },
+				{ year: 2011, v: 20, c: 15, p: 300 },
+				{ year: 2012, v: 15, c: 25, p: 375 },
+				{ year: 2013, v: 25, c: 22, p: 550 },
+				{ year: 2014, v: 22, c: 30, p: 660 },
+				{ year: 2015, v: 30, c: 28, p: 840 },
+				{ year: 2016, v: 28, c: 10, p: 280 },
 			];
 			
 			let jschart =new Chart(
@@ -129,14 +129,52 @@
 						datasets: [
 							{
 								label: 'Voltage',
-								data: data.map(row => row.v)
+								data: data.map(row => row.v),
+								yAxisID: 'left-y-axis'
 							},
 							{
 								label: 'Current',
-								data: data.map(row => row.c)
+								data: data.map(row => row.c),
+								yAxisID: 'right-y-axis-1',
+
+							},
+							{
+								label: 'Power',
+								data: data.map(row => row.p),
+								yAxisID: 'right-y-axis-2',
+								type: 'bar',
 							}
 						]
-					}
+					},
+					options: {
+						scales: {
+							'left-y-axis': {
+								type: 'linear',
+								position: 'left',
+								// min: 0,
+								title: {
+									display: true,
+									text: 'Vol'
+								},
+							},
+							'right-y-axis-1': {
+								type: 'linear',
+								position: 'right',
+								title: {
+									display: true,
+									text: 'Current'
+								},
+							},
+							'right-y-axis-2': {
+								type: 'linear',
+								position: 'right',
+								title: {
+									display: true,
+									text: 'Power'
+								},
+							}
+						}
+					},
 				}
 			);
 		}) //END $onMounted
