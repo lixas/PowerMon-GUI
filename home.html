@@ -11,19 +11,17 @@
 					</div>
 					<div class="title">Power Monitor</div>
 					<div class="right">
-						<a class="link icon-only navbar-tooltip">
-							<i class="icon f7-icons">bolt_slash</i>
+						<a href="#" @click=${BLEconnectAlert} class="link icon-only navbar-tooltip">
+							<i class="icon f7-icons">bolt</i>
+							<!-- <i class="icon f7-icons">bolt_slash</i> -->
 						</a>
 					</div>
 				</div>
 			</div>
+<!-- Area Chart element -->
+			<div style="width: 100%;"><canvas id="measurements-chart"></canvas></div>
 <!-- main content begin -->
 			<div class="block">
-				<!-- <p class="text-align-center">Updated 2023-11-28</p> -->
-<!-- Area Chart element -->
-				<!-- <div class="area-chart area-chart-lines"></div> -->
-				<div style="width: 100%;"><canvas id="measurements-chart"></canvas></div>
-<div class="list list-dividers-ios"></div>
 				<div class="data-table">
 					<table>
 						<thead>
@@ -41,26 +39,6 @@
 								<td class="text-cell">${item.val[item.idx]}</td>
 							</tr>
 							`)}
-							
-							<!-- <tr>
-								<td class="label-cell">Voltage</td>
-								<td class="numeric-cell">4.20</td>
-								<td class="text-cell">V</td>
-							</tr>
-							<tr>
-								<td class="label-cell">Current</td>
-								<td class="numeric-cell">1.39</td>
-								<td class="text-cell">A</td>
-							</tr>
-							<tr>
-								<td class="label-cell">Power</td>
-								<td class="numeric-cell">5.838</td>
-								<td class="text-cell">W</td>
-							</tr>
-							<tr>
-								<td class="label-cell">Time</td>
-								<td colspan="2" class="numeric-cell">74:37:13</td>
-							</tr> -->
 						</tbody>
 					</table>
 				</div>
@@ -90,6 +68,10 @@
 		const remoteControlInfo = () => {
 			$f7.dialog.alert('Using these buttons you can control device. You must have visual with the device to see what you are doing.', 'Remote Control');
 		}
+
+		const BLEconnectAlert = () => {
+			$f7.dialog.alert('Clicking this button would show dialog to connect Atorch device', '');
+		}
 		
 		// Will be split into separate functions
 		const ControlButton = (atr) => {
@@ -107,7 +89,7 @@
 			
 			$f7.tooltip.create({
 				targetEl: '.navbar-tooltip',
-				text: 'One more tooltip<br />with more text<br /><em>and custom formatting</em>',
+				text: 'Connect<br /> to <br /><em>BLE</em>',
 			});
 			
 			const data = [
@@ -154,7 +136,7 @@
 								// min: 0,
 								title: {
 									display: true,
-									text: 'Vol'
+									text: 'Voltage'
 								},
 							},
 							'right-y-axis-1': {
