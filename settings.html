@@ -1,3 +1,10 @@
+<style>
+  .scrolable-dialog {
+    height: 80%;
+    overflow: scroll;
+  }
+
+</style>
 <template>
   <div class="page">
     <div class="navbar">
@@ -20,28 +27,6 @@
     <div class="page-content">
         <!-- <a href="#" class="link button" @click=${helloWorld}>Test</a> -->
         
-      <!-- Simulate harware -->
-      <div class="list list-media list-outline-ios list-strong-ios list-dividers-ios">
-        <ul>
-          <li>
-            <div class="item-content">
-              <!-- <div class="item-media"><i class="icon f7-icons">sparkles</i></div> -->
-              <div class="item-inner">
-                <div class="item-title">
-                    Simulate hardware
-                    <div class="item-footer">If you dont have required hardware but still want to check application, you can use in-app hardware simulator. NOTE: Still you have to "connect"</div>
-                </div>
-                <div class="item-after">
-                  <label class="toggle toggle-init">
-                    <input type="checkbox" />
-                    <span class="toggle-icon"></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
       <div class="block-title">Chart</div>
       <div class="list list-outline-ios list-strong-ios list-dividers-ios">
         <ul>
@@ -55,7 +40,7 @@
                 </div>
                 <div class="item-after">
                   <label class="toggle toggle-init">
-                    <input type="checkbox" />
+                    <input type="checkbox" checked=${settingsVals.chart.show}  @change=${showChartChange} />
                     <span class="toggle-icon"></span>
                   </label>
                 </div>
@@ -86,23 +71,32 @@
               </div>
             </a>
           </li>
+
+          <li>
+            <a class="item-link sheet-open" data-sheet=".points-sheet">
+              <!-- <div class="item-media"><i class="icon icon-f7"></i></div> -->
+              <div class="item-inner item-content">
+                <div class="item-title">Number of points
+                  <div class="item-footer">Explain What is this</div>
+                </div>
+                <div class="item-after">${window.settings.chart.points}</div>
+              </div>
+            </a>
+          </li>
         </ul>
       </div>
       <div class="list list-strong-ios list-outline-ios list-dividers-ios">
         <ul>
           <li>
-            <div class="item-content popup-open sortable-enable" data-sortable=".sortable" data-popup=".sort-popup">
+            <a class="item-link popup-open sortable-enable" data-sortable=".sortable" data-popup=".sort-popup">
               <!-- <div class="item-media"><i class="icon icon-f7"></i></div> -->
-              <div class="item-inner">
-                <div class="item-title">
-                    Measurements order and visibility
-                    <div class="item-footer">Select the order of elements that you would like to see or hide irrelevant ones for you dash</div>
+              <div class="item-inner item-content">
+                <div class="item-title">Measurements order and visibility
+                  <div class="item-footer">Select the order of elements that you would like to see or hide irrelevant ones for you dash</div>
                 </div>
-                <div class="item-after">
-                  <span class="badge">5</span>
-                </div>
+                <div class="item-after">${window.settings.measurements.filter(item => item.checked).length}</div>
               </div>
-            </div>
+            </a>
           </li>
         </ul>
       </div>
@@ -110,6 +104,8 @@
           Hello World
       </div> -->
     </div>
+
+    <!-- sort modal'as -->
     <div class="popup sort-popup">
       <div class="page">
         <div class="navbar">
@@ -117,18 +113,18 @@
           <div class="navbar-inner">
             <div class="title">Select and reorder</div>
             <div class="right">
-              <a class="link popup-close" @click="helloWorld">Close</a>
+              <a class="link popup-close">Close</a>
             </div>
           </div>
         </div>
         <div class="page-content">
             <!-- <div class="block"> <a class="button sortable-toggle" data-sortable=".sortable">Enable sort1</a> -->
-            <div class="list sortable">
+            <div class="list sortable" id="MeasurementsSortList">
               <ul> 
-                  ${window.Measurements.map((item) => $h` 
+                  ${window.settings.measurements.map((item) => $h` 
                 <li>
                   <div class="item-checkbox item-content">
-                    <input type="checkbox" name=${item.key} checked=${item.checked} />
+                    <input type="checkbox" id=${item.key} checked=${item.checked} />
                     <!-- <div class="item-media"><i class="icon icon-f7"></i></div> -->
                     <div class="item-inner">
                       <div class="item-title">${item.title}</div>
@@ -144,26 +140,102 @@
         </div>
       </div>
     </div>
+    <!-- Range sheet'as -->
+    <div class="sheet-modal points-sheet">
+      <div class="toolbar">
+        <div class="toolbar-inner">
+          <div class="left"></div>
+          <div class="right">
+            <a class="link sheet-close">Close</a>
+          </div>
+        </div>
+      </div>
+      <div class="sheet-modal-inner">
+        <div class="page-content">
+          <div class="block">
+            Choose how many datapoint to show on the chart. 
+          </div>
+              <!-- Range Slider element -->
+              <div style="margin-top: 30px; margin-left: 18px; margin-right: 18px; ">
+                <div class="range-slider range-slider-init range-slider-points" data-min="20" data-max="200" data-label="true" data-step="1" data-value=${window.settings.chart.points} data-scale="true" data-scale-steps="5" data-scale-sub-steps="4"></div>
+              </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 
 <script>
-export default (props, { $f7 }) => {
+export default (props, { $f7, $onMounted, $update, $onBeforeUnmount }) => {
+    
+  let settingsVals = window.settings;
 
-    const helloWorld = () => {
-        $f7.dialog.alert('Hello World!', 'My title');
-        
-        // Create toast
-        let toastCenter = $f7.toast.create({
-            text: 'I\'m on center',
-            position: 'center',
-            closeButton: true,
-            closeTimeout: 5000,
-        });
-        // Open it
-        toastCenter.open();
-    };
+  const showChartChange = (evt) => {
+    settingsVals.chart.show = evt.target.checked;
+  }
+
+  const helloWorld=()=>{
+    console.log('helloWorld')
+    $f7.dialog.alert('Hello World!', 'My title');
+  }
+
+    $onMounted(() => {
+
+      let sortPopup = $f7.popup.create({
+        el: '.sort-popup',
+        swipeToClose: true,
+        push: true,
+        on: {
+          close: function (){
+            let sortedMeasurements = Array()
+            document.querySelector('#MeasurementsSortList ul').childNodes.forEach(element => {
+              for (const mLine of window.settings.measurements ){
+                if (mLine.key === element.querySelector('input').id ) {
+                  sortedMeasurements.push({key: mLine.key,
+                    checked: element.querySelector('input').checked,
+                    title: mLine.title,
+                    idx: mLine.idx,
+                    val: mLine.val})
+                  break
+                }
+              }
+            }); //forach
+            settingsVals.measurements = sortedMeasurements
+            $update()
+          } //close
+        }
+      });
+
+      let rangeSheet = $f7.sheet.create({
+        el: '.points-sheet',
+        swipeToClose: true,
+        push: true,
+        on: {
+          close: function (){
+            $update()
+          }
+        }
+      });
+
+      let rangeSLider = $f7.range.create({
+        el: '.range-slider-points',
+        on: {
+          changed: function(evt, value){
+            window.settings.chart.points=value;
+            $update();
+          }
+        }
+      });
+
+    })
+
+    $onBeforeUnmount(()=>{
+      window.settings = settingsVals
+      $f7.emit('SettingsChanged')
+    })
+
 
     return $render;
 };

@@ -11,7 +11,7 @@
 					</div>
 					<div class="title">Power Monitor</div>
 					<div class="right">
-						<a href="#" @click=${BLEconnectAlert} class="link icon-only navbar-tooltip">
+						<a href="#" class="link icon-only navbar-tooltip popup-open" data-popup=".sheet-swipe-to-close">
 							<i class="icon f7-icons">bolt</i>
 							<!-- <i class="icon f7-icons">bolt_slash</i> -->
 						</a>
@@ -22,17 +22,22 @@
 			<div style="width: 100%;"><canvas id="measurements-chart"></canvas></div>
 <!-- main content begin -->
 			<div class="block">
+
 				<div class="data-table">
 					<table>
 						<thead>
-							<tr>
+								<tr>
+						${window.settings.measurements.filter(item => item.checked).length > 0 ? $h`
 								<th class="label-cell">Measurement</th>
 								<th class="numeric-cell">Value</th>
 								<th class="text-cell">Unit</th>
+						  ` : $h`
+								<th class="text-cell"> </th>
+						  `}
 							</tr>
 						</thead>
 						<tbody>
-							${window.Measurements.filter(item => item.checked).map((item) => $h`
+							${window.settings.measurements.filter(item => item.checked).map((item) => $h`
 							<tr id="Measurement-${item.key}">
 								<td class="label-cell">${item.title}</td>
 								<td class="numeric-cell">0</td>
@@ -42,7 +47,7 @@
 						</tbody>
 					</table>
 				</div>
-<!-- Remote control buttons -->
+				<!-- Remote control buttons -->
 				<div class="block-title">
 					<a href="#" @click=${remoteControlInfo}><i class="icon f7-icons">info_circle</i></a>
 						Device remote control
@@ -56,22 +61,92 @@
 					</div>
 				</div>
 				<!-- <div class="block-footer">tooter text</div> -->
-<!-- / Remote control buttons -->
+				<!-- / Remote control buttons -->
 			</div>
 		</div>
+
+
+		<div class="popup sheet-swipe-to-close">
+      <div class="page">
+        <div class="navbar">
+          <div class="navbar-bg"></div>
+          <div class="navbar-inner">
+            <div class="title">Select Atorch device</div>
+            <div class="right">
+              <a class="link popup-close">Close</a>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+					<div class="block">
+						<label class="item-checkbox item-checkbox-icon-end item-content">
+							<input type="checkbox" name="demo-checkbox" value="default" />
+							<i class="icon icon-checkbox"></i>
+							<div class="item-inner">
+								<div class="item-title">Set as default connection</div>
+							</div>
+						</label>
+					</div>
+					<div class="list list-outline-ios list-strong-ios list-dividers-ios">
+						<ul>
+							${window.settings.measurements.map((item) => $h`
+							<li>
+								<a class="item-link item-content" @click=${onBleDeviceSelected.bind(null, item.key )}>
+									<div class="item-media"><i class="icon f7-icons">info_circle</i></div>
+									<div class="item-inner">
+										<div class="item-title">
+											<div class="item-header">${item.key}:${item.key}:${item.key}</div>
+											${item.title}
+											<div class="item-footer">${item.val[item.idx]} dbm</div>
+										</div>
+										<!-- <div class="item-after">Edit</div> -->
+									</div>
+								</a>
+							</li>
+							`)}
+							<li>
+								<a class="item-link item-content" @click=${onBleDeviceSelected.bind(null, '00:00:00:00:00:00')} >
+									<div class="item-media"><i class="icon f7-icons">bolt_horizontal</i></div>
+									<div class="item-inner">
+										<div class="item-title">
+											<div class="item-header">00:00:00:00:00:00</div>
+                			Hardware Simulator
+											<!-- <div class="item-footer">Signal strenght</div> -->
+										</div>
+										<!-- <div class="item-after">Edit</div> -->
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+        </div>
+      </div>
+    </div>
+
 	</div>
 </template>
 
 <script>
-  export default (props, { $f7, $onMounted, $onBeforeUnmount }) => {
+  export default (props, { $f7, $onMounted, $update, $onBeforeUnmount}) => {
+
+		let connectPopup
 		
 		const remoteControlInfo = () => {
 			$f7.dialog.alert('Using these buttons you can control device. You must have visual with the device to see what you are doing.', 'Remote Control');
 		}
 
+		const onBleDeviceSelected = (adr) => {
+			console.log("BLE device selected: ", adr);
+			connectPopup.close();
+		 }
+
 		const BLEconnectAlert = () => {
 			$f7.dialog.alert('Clicking this button would show dialog to connect Atorch device', '');
 		}
+
+		$f7.on('SettingsChanged', function (){
+			$update();
+		})
 		
 		// Will be split into separate functions
 		const ControlButton = (atr) => {
@@ -82,10 +157,54 @@
 				closeButton: true,
 			}).open();
 		}
-		
-		// document.getElementById('Measurement-Vol').children[1].innerHTML="7"
+
+		// const reloadMain = () => {
+		// 		// Update state to rerender
+		// 		$update();
+		// }
 		
 		$onMounted(() => {
+
+			const updateOrAddDevice = (newDevice, BLEDevicesList) => {
+				for (const device of BLEDevicesList) {
+					if (device.mac === newDevice.mac) {
+						device.name = newDevice.name;
+						device.signal = newDevice.signal;
+						return BLEDevicesList;
+					}
+				}
+				BLEDevicesList.push(newDevice);
+				return BLEDevicesList;
+			}
+		
+			let updateIntervalTimer;
+			let BLEDevicesList = [];
+			// let BleObject = app.CreateBluetoothLE();    // uncomment when on DS
+
+			connectPopup = $f7.popup.create({
+        el: '.sheet-swipe-to-close',
+        swipeToClose: true,
+        push: true,
+				on: {
+					opened: function () {
+						// updateIntervalTimer = setTimeout(function(){
+						updateIntervalTimer = setInterval(function(){
+							$update();
+						}, 2000);
+
+						// Begin BLE scanning
+						// BleObject.SetOnDevice(function(name, adr, bond, rssi, data){
+						//   BLEDevicesList = updateOrAddDevice({"mac":adr, "name":name?name:data.type, "signal": rssi}, BLEDevicesList)
+						// });
+						// BleObject.StartScan();    // uncomment when on DS
+					},
+					closed: function () {
+
+						clearInterval(updateIntervalTimer);
+          // BleObject.StopScan();    // uncomment when on DS
+					},
+				}
+      });
 			
 			$f7.tooltip.create({
 				targetEl: '.navbar-tooltip',

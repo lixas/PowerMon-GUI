@@ -1,233 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" /> -->
-		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<!-- <meta name="theme-color" content="#2196f3" /> -->
-		<meta
-			http-equiv="Content-Security-Policy"
-			content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data:"
-		/>
-		<title>Power Monitor</title>
-		<link rel="stylesheet" href="css/framework7-bundle.min.css" />
-		<link rel="stylesheet" href="css/framework7-icons.css" />
-		<style>
-			:root {
-				--f7-bars-shadow-bottom-image: none;
-				--f7-searchbar-input-padding-horizontal: 24px;
-				--f7-navbar-margin: 12px;
-				--f7-block-margin-vertical: 10px;
-			}
+<head>
+<meta charset="UTF-8" />
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" /> -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<!-- <meta name="theme-color" content="#2196f3" /> -->
+<title>Power Monitor</title>
+<link rel="stylesheet" href="css/framework7-bundle.min.css" />
+<link rel="stylesheet" href="css/framework7-icons.css" />
+<style>
+    :root {
+        --f7-bars-shadow-bottom-image: none;
+        --f7-searchbar-input-padding-horizontal: 24px;
+        --f7-navbar-margin: 12px;
+        --f7-block-margin-vertical: 10px;
+        --f7-dialog-inner-padding: 14px
+    }
 
-			.navbar {
-				/* margin: 24px var(--f7-navbar-margin); */
-				/* width: calc(100% - 2 * var(--f7-navbar-margin)); */
-				border-radius: 12px;
-				overflow: hidden;
-				--f7-navbar-bg-color: #fff;
-			}
+    .navbar {
+        /* margin: 24px var(--f7-navbar-margin); */
+        /* width: calc(100% - 2 * var(--f7-navbar-margin)); */
+        border-radius: 12px;
+        overflow: hidden;
+        --f7-navbar-bg-color: #fff;
+    }
 
-			.dark .navbar {
-				--f7-navbar-bg-color: #000;
-			}
+    .dark .navbar {
+        --f7-navbar-bg-color: #000;
+    }
 
-			.navbar .title {
-				width: 100%;
-				margin: 0;
-			}
+    .navbar .title {
+        width: 100%;
+        margin: 0;
+    }
 
-			/* Limit resizable panel width */
-			.panel {
-				width: 70vw;
-			}
+    /* Limit resizable panel width */
+    .panel {
+        width: 70vw;
+        max-width: 480px;
+    }
 
-			.panel-logo{
-				background-image:url(images/GreenBack.jpg); 
-				padding-bottom:10px; 
-				border-radius: 8px; 
-				color: #fff
-			}
-		</style>
-	</head>
-	<body>
-		<div id="app"><!-- Left side panel	 -->
-			<div class="panel panel-left panel-cover">
-				<div class="page page-accounts">
-					<div class="page-content">
-						<div class="block-title .round panel-logo">
-							<div class="margin-left">
-							<img alt="Logo" src="images/website_logo.png" />
-							<p class="title">Ignas Bukys</p>
-							http://www.bukys.eu
-							</div>
-						</div>
-						<div class="list no-chevron">
-							<ul>
-								<li>
-									<a href="#" class="item-content item-link panel-close" onclick="toggleTheme()">
-										<div class="item-media">
-											<i class="icon f7-icons">circle_lefthalf_fill</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">Switch theme</div>
-										</div>
-									</a>
-								</li>
-								<div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
-								<li>
-									<a href="/settings" class="item-content item-link panel-close" data-transition="f7-cover">
-										<div class="item-media">
-											<i class="icon f7-icons">gear_alt</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">Settings</div>
-										</div>
-									</a>
-								</li>
-								<li>
-									<a href="/about" class="item-content item-link panel-close" data-transition="f7-cover" >
-										<div class="item-media">
-											<i class="icon f7-icons">question_circle</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">About</div>
-										</div>
-									</a>
-								</li>
-								<div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
-								<li>
-									<a href="http://www.bukys.eu/me/start" target="_blank" class="item-content item-link link external">
-										<div class="item-media">
-											<i class="icon f7-icons">person</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">About Me</div>
-										</div>
-									</a>
-								</li>
-								<li>
-									<a href="http://www.bukys.eu" target="_blank" class="item-content item-link link external">
-										<div class="item-media">
-											<i class="icon f7-icons">archivebox</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">Website</div>
-										</div>
-									</a>
-								</li>
-								<div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
-								<li>
-									<a href="#" class="item-content item-link" onClick="newVersionAvailable()" >
-										<div class="item-media">
-											<i class="icon f7-icons">tray_arrow_down</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">Upgrade available</div>
-											<div class="item-after">
-												<div class="badge">Ver. 0.4</div>
-											</div>
-										</div>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-<!-- /END Left side panel	 -->
-			<div class="view view-main"></div>
-		</div>
+    .panel-logo {
+        background-image: url(Img/GreenBack.jpg);
+        padding-bottom: 10px;
+        border-radius: 8px;
+        color: #fff
+    }
+</style>
+<!-- <script src="ds:/Sys/app.js"></script> -->
+<script src="js/framework7-bundle.min.js"></script>
+<script src="js/chart.umd.js"></script>
+<script>
+    //Serv files from internal web server so xhr requests work.
+    //  cfg.Serv
+    
+    // app.EnableBackKey( false );
+    
+    
+    var globalTheme;
+    var $$ = Dom7;
+    var webapp;
+    
+    const setLayoutTheme = (newTheme) => {
+        // var $$html = $$('html');
+        globalTheme = newTheme;
+        $$('html').removeClass('dark light').addClass(globalTheme);
+    };
+    
+    const toggleTheme = () => {
+        if (globalTheme === 'light') {
+            setLayoutTheme('dark')
+        } else {
+            setLayoutTheme('light')
+        }
+    };
+    
+    const newVersionAvailable = () => {
+        webapp.dialog.alert('This action will begin new version download', 'Updater');
+    };
+    
+    //Start the app.
+    function OnStart() {
+        webapp = new Framework7({
+            el: '#PowerMonAppDiv',
+            theme: 'md',
+            routes: [{
+                path: '/',
+                componentUrl: './home.html',
+            }, {
+                path: '/settings',
+                componentUrl: './settings.html',
+            }, {
+                path: '/about',
+                componentUrl: './about.html',
+            }, ],
+            // App root methods
+            // methods: {
+            //     helloWorld: function() {
+            //         webapp.dialog.alert('Hello World!');
+            //     },
+            //     backonepage: function() {
+            //         webapp.views.main.router.back();
+            //     },
+            // },
+            view: {
+                pushState: true,
+            },
+            touch: {
+            //     tapHold: true,
+                mdTouchRipple: false,
+            },
+        });
+        
+        webapp.views.create('.view-main', {
+            url: '/'    // default
+            // url: '/settings'
+        })
+        
+        // detect default theme
+        globalTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'dark' : 'light'
+        setLayoutTheme(globalTheme);       
+    }
 
-		<script src="js/framework7-bundle.min.js"></script>
-		<script src="js/chart.umd.js"></script>
-		<script>
-			var $$ = Dom7;
-			const webapp = new Framework7({
-				el: '#app',
-				theme: 'md',
-				routes: [
-					{
-						path: '/',
-						componentUrl: './home.html',
-					},
-					{
-						path: '/settings',
-						componentUrl: './settings.html',
-					},
-					{
-						path: '/about',
-						componentUrl: './about.html',
-					},
-				],
-				// App root methods
-				methods: {
-					helloWorld: function () {
-						webapp.dialog.alert('Hello World!');
-					},
-					backonepage: function () {
-						webapp.views.main.router.back();
-					},
-				},
-				view: {
-					pushState: true,
-				},
-				touch: {
-					tapHold: true,
-				},
-			});
-			
-			function newVersionAvailable() {
-						webapp.dialog.alert('This action will begin new version download', 'Updater');
-			};
+    
+    function OnBack() {
+		if ($$('.panel-left').hasClass('panel-in')) {
+			webapp.panel.close();
+			return false;
+		}
+		else if ($$('.modal-in').length > 0) {
+			webapp.sheet.close();
+			webapp.dialog.close();
+			webapp.popup.close();
+			return false;
+		} else if (webapp.views.main.router.url == '/') {
+		    console.log("Programos uzdarymas");
+            webapp.dialog.confirm('Close application?', 'PowerMon', function () {
+                app.Exit();
+            });
+		} else {
+			webapp.views.main.router.back();
+		}
+	}
+    
+    
+    window.settings= {
+        simulateHW: true,
+        chart: {
+            show:true,
+            duration: 300,
+            points: 116
+        },
+        measurements : [
+            { key: 'Vol',       checked: true,  title: 'Voltage',           idx: 0, val: ['V'] },
+            { key: 'Cur',       checked: true,  title: 'Current',           idx: 0, val: ['A'] },
+            { key: 'Pwr',       checked: true,  title: 'Power',             idx: 0, val: ['W', 'kW'] },
+            { key: 'Cap',       checked: false, title: 'Capacity',          idx: 0, val: ['Ah', 'mAh'] },
+            { key: 'Ene',       checked: true,  title: 'Energy',            idx: 0, val: ['Wh', 'kWh'] },
+            { key: 'DMinPlus',  checked: false, title: 'Data lines volt',   idx: 0, val: ['V'] },
+            { key: 'Price',     checked: false, title: 'Price per kWh',     idx: 0, val: ['¤/kWh'] },
+            { key: 'Cost',      checked: false, title: 'Cost',              idx: 0, val: ['¤'] },
+            { key: 'Freq',      checked: false, title: 'Frequency',         idx: 0, val: ['Hz'] },
+            { key: 'PowFact',   checked: false, title: 'Power Factor',      idx: 0, val: ['PF'] },
+            { key: 'Temp',      checked: true,  title: 'Temperature',       idx: 0, val: ['°C', '°F'] },
+            { key: 'Time',      checked: true,  title: 'Time',              idx: 0, val: [''] },
+        ]
+    };
+// helper functions
+function dump(obj) {
+    var out = '';
+    for (var i in obj) {
+        out += i + ": " + obj[i] + "\n";
+    }
 
-			
-			webapp.views.create('.view-main', {
-				url: '/'
-			})
-	
-			var globalTheme
-			
-			// detect default theme
-			if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-				// Theme set to dark.
-				globalTheme = 'dark';
-			} else {
-				// Theme set to light.
-				globalTheme = 'light';
-			}
+    return out;
+}
+    
+function dump2(v, howDisplay, recursionLevel) {
+/*
+dump() displays the contents of a variable like var_dump() does in PHP. dump() is
+better than typeof, because it can distinguish between array, null and object.  
+Parameters:
+  v:              The variable
+  howDisplay:     "none", "body", "alert" (default)
+  recursionLevel: Number of times the function has recursed when entering nested
+                  objects or arrays. Each level of recursion adds extra space to the 
+                  output to indicate level. Set to 0 by default.
+Return Value:
+  A string of the variable's contents 
+Limitations:
+  Can't pass an undefined variable to dump(). 
+  dump() can't distinguish between int and float.
+  dump() can't tell the original variable type of a member variable of an object.
+  These limitations can't be fixed because these are *features* of JS. However, dump()
+*/
+    
+    /* repeatString() returns a string which has been repeated a set number of times */ 
+    function repeatString(str, num) {
+        out = '';
+        for (var i = 0; i < num; i++) {
+            out += str; 
+        }
+        return out;
+    }
+    
+    howDisplay = (typeof howDisplay === 'undefined') ? "none" : howDisplay;
+    recursionLevel = (typeof recursionLevel !== 'number') ? 0 : recursionLevel;
 
-			const setLayoutTheme = (newTheme) => {
-				var $$html = $$('html');
-				globalTheme = newTheme;
-				$$html.removeClass('dark light').addClass(globalTheme);
-			};
-			setLayoutTheme(globalTheme);
-	
-			const toggleTheme = () => {
-			  if (globalTheme === 'light') {
-			    setLayoutTheme('dark')
-			  } else {
-					setLayoutTheme('light')
-			  }
-			}
 
-			window.Measurements = [
-				{ key: 'Vol',				checked: true,	title: 'Voltage',					idx: 0, val: ['V']					},
-				{ key: 'Cur',				checked: true,	title: 'Current',					idx: 0, val: ['A']					},
-				{ key: 'Pwr',				checked: true,	title: 'Power',						idx: 0, val: ['W', 'kW']		},
-				{ key: 'Cap',				checked: false,	title: 'Capacity',				idx: 0, val: ['Ah', 'mAh']	},
-				{ key: 'Ene',				checked: true,	title: 'Energy',					idx: 0, val: ['Wh', 'kWh']	},
-				{ key: 'DMinPlus',	checked: false,	title: 'Data lines volt',	idx: 0, val: ['V']					},
-				{ key: 'Price',			checked: false, title: 'Price per kWh',		idx: 0, val: ['¤/kWh']			},
-				{ key: 'Cost',			checked: false, title: 'Cost',						idx: 0, val: ['¤']					},
-				{ key: 'Freq',			checked: false, title: 'Frequency',				idx: 0, val: ['Hz']					},
-				{ key: 'PowFact',		checked: false, title: 'Power Factor',		idx: 0, val: ['PF']						},
-				{ key: 'Temp',			checked: false, title: 'Temperature',			idx: 0, val: ['°C', '°F']		},
-				{ key: 'Time',			checked: true,	title: 'Time',						idx: 0, val: ['']						},
-			];
-		</script>
-	</body>
+    var vType = typeof v;
+    var out = vType;
+
+    switch (vType) {
+        case "number":
+            /* there is absolutely no way in JS to distinguish 2 from 2.0
+            so 'number' is the best that you can do. The following doesn't work:
+            var er = /^[0-9]+$/;
+            if (!isNaN(v) && v % 1 === 0 && er.test(3.0))
+                out = 'int';*/
+        case "boolean":
+            out += ": " + v;
+            break;
+        case "string":
+            out += "(" + v.length + '): "' + v + '"';
+            break;
+        case "object":
+            //check if null
+            if (v === null) {
+                out = "null";
+
+            }
+            //If using jQuery: if ($.isArray(v))
+            //If using IE: if (isArray(v))
+            //this should work for all browsers according to the ECMAScript standard:
+            else if (Object.prototype.toString.call(v) === '[object Array]') {  
+                out = 'array(' + v.length + '): {\n';
+                for (var i = 0; i < v.length; i++) {
+                    out += repeatString('   ', recursionLevel) + "   [" + i + "]:  " + 
+                        dump2(v[i], "none", recursionLevel + 1) + "\n";
+                        // arguments.callee(v[i], "none", recursionLevel + 1) + "\n";
+                        // console.log("Arguments: "+arguments.callee.toString());
+                }
+                out += repeatString('   ', recursionLevel) + "}";
+            }
+            else { //if object    
+                sContents = "{\n";
+                cnt = 0;
+                for (var member in v) {
+                    //No way to know the original data type of member, since JS
+                    //always converts it to a string and no other way to parse objects.
+                    sContents += repeatString('   ', recursionLevel) + "   " + member +
+                        ":  " + dump2(v[member], "none", recursionLevel + 1) + "\n";
+                        // ":  " + arguments.callee(v[member], "none", recursionLevel + 1) + "\n";
+                    cnt++;
+                }
+                sContents += repeatString('   ', recursionLevel) + "}";
+                out += "(" + cnt + "): " + sContents;
+            }
+            break;
+    }
+
+    if (howDisplay == 'body') {
+        var pre = document.createElement('pre');
+        pre.innerHTML = out;
+        document.body.appendChild(pre);
+    }
+    else if (howDisplay == 'alert') {
+        alert(out);
+    }
+
+    return out;
+}
+    
+</script>
+</head>
+<!-- <body onload="app.Start()"> -->
+<body onload="OnStart()">
+<div id="PowerMonAppDiv">
+    <!-- Left side panel -->
+    <div class="panel panel-left panel-cover">
+        <div class="page page-accounts">
+            <div class="page-content">
+                <div class="block-title .round panel-logo">
+                    <div class="margin-left">
+                        <img alt="Logo" src="Img/website_logo.png" />
+                        <p class="title">Ignas Bukys</p> http://www.bukys.eu
+                    </div>
+                </div>
+                <div class="list no-chevron">
+                    <ul>
+                        <li>
+                            <a href="#" class="item-content item-link panel-close" onClick="toggleTheme()">
+                                <div class="item-media">
+                                    <i class="icon f7-icons">circle_lefthalf_fill</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">Switch theme</div>
+                                </div>
+                            </a>
+                        </li>
+                        <div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
+                        <li>
+                            <a href="/settings" class="item-content item-link panel-close" data-transition="f7-cover">
+                                <div class="item-media">
+                                    <i class="icon f7-icons">gear_alt</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">Settings</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/about" class="item-content item-link panel-close" data-transition="f7-cover">
+                                <div class="item-media">
+                                    <i class="icon f7-icons">question_circle</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">About</div>
+                                </div>
+                            </a>
+                        </li>
+                        <div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
+                        <li>
+                            <a href="#" onclick="app.OpenUrl('http://www.bukys.eu/me/start')" class="item-content item-link link">
+                                <div class="item-media">
+                                    <i class="icon f7-icons">person</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">About Me</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="app.OpenUrl('http://www.bukys.eu/')" class="item-content item-link link external">
+                                <div class="item-media">
+                                    <i class="icon f7-icons">archivebox</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">Website</div>
+                                </div>
+                            </a>
+                        </li>
+                        <div class="list list-outline-ios list-strong-ios list-dividers-ios"></div>
+                        <li>
+                            <a href="#" class="item-content item-link" onClick="newVersionAvailable()">
+                                <div class="item-media">
+                                    <i class="icon f7-icons">tray_arrow_down</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">Upgrade available</div>
+                                    <div class="item-after">
+                                        <div class="badge">Ver. 0.4</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /END Left side panel -->
+    <div class="view view-main"></div>
+</div>
+</body>
 </html>
